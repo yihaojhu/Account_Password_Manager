@@ -12,38 +12,42 @@ To use this GUI, one has to install **python 2** program as well as **PyQt4** an
 
 3. Same procedure as 2., but use `conda install crypto` to install Crypto library. 
 
-Finally, one can start the GUI by `python ac_pw_manager.py`.
+
+Before using the GUI, one has to setup the icon files. This can be done by `pyrcc4 -o icons.py icons.qrc`.
+
+Finally, one can start the GUI by `python account_password_manager.py`.
 
 ## Usage
-### Add a set of account and password for a particular service
+### Add a set of account and password for a particular service into database
 
 1. Fill the **Magic Number** field with a secret code defined and remembered by yourself. 
 2. Fill the **Service** field for indicating what is this set of account and password for.
 3. Fill the account (or its hint) in the **AC or its hint** field.
 4. Fill the password (or its hint) in the **PW or its hint** field.
-5. Press **Add** button to add data into database (appear as **database.txt** in the same directory).
+5. Press **Add** button to add data into database shown in the right dock-widget.
 
-### Look up the account and password for a particular service
+### Look up the account and password for a particular service from the database
 
-First way:
 1. Fill the **Magic Number** field with the secret code that you used while saving the corresponding data into the database.
-2. Fill the service you wnat to look up in the **Service** field (have to match the one you input).
+2. Fill the service field by either typing or clicking the service shown in the right dock-widget.
 3. Press **Find** button to check the account and password of the service.
 
-Second way:
-1. Fill the **Magic Number** field with the secret code that you used while saving the corresponding data into the database.
-2. Press **Display** button and check the services saved in the database from the poped window. 
-3. Click the service you want to look up in the poped window.
-4. Press **Find** button to check the account and password of the service.
 
+### Remove the account and password for a particular service in the database
 
-### Remove the account and password for a particular service
-
-First way:
-1. Fill the name of service you wnat to look up in the **Service** field (have to match the one you input).
+1. Fill the service field by either typing or clicking the service shown in the right dock-widget.
 2. Press **Remove** button to remove the data for the corresponding service.
 
-Second way:
-1. Press **Display** button and check the services saved in the database from the poped window. 
-2. Click the service you want to remove in the poped window.
-3. Press **Remove** button to remove the data for the corresponding service.
+
+### Save the database
+
+1. Save to original databse: Press the **Save** button in the toolbar.
+2. Save as a new database: Press the **Save As** button in the toolbar.
+
+### Load the database
+
+1. Load an existing databse: Press the **Open** button in the toolbar.
+2. Open an empty database: Press the **New** button in the toolbar.
+
+
+
