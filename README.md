@@ -1,4 +1,8 @@
 # Account_Password_Manager
+
+[demo]: https://github.com/yihaojhu/Account_Password_Manager/blob/master/Demo.png
+![][demo]
+
 A python GUI for managing your accounts and passwords.
 
 As a result that tha database only store encrypted accounts and passwords, the security of the database are guaranteed.
@@ -12,21 +16,20 @@ To use this GUI, one has to install **python 2** program as well as **PyQt4** an
 
 3. Same procedure as 2., but use `conda install crypto` to install Crypto library.
 
-If 2. is failed or you have anaconda with python3 installed, it is strongly recommended to use the [virtual environment](https://docs.continuum.io/anaconda/install) for the installation. To create a virtual environment, for example of name "myenv", with python2 and pyqt4 installed, one can use `conda create -n myenv python=2 pyqt=4`. Then, use `activate myenv`(windows) or `source activate myenv`(linux based OS) to enter the environment myenv. As long as you have entered myenv, you just need to do 3. and everything should work nicely.
+If 2. failed or you have anaconda with python3 installed, it is strongly recommended to use the [virtual environment](https://docs.continuum.io/anaconda/install) for the installation. To create a virtual environment, for example, of name "myenv" with python2 and pyqt4 installed, one can use `conda create -n myenv python=2 pyqt=4`. Then, use `activate myenv`(windows) or `source activate myenv`(linux based OS) to enter the environment myenv. As long as you have entered myenv, you just need to do 3. and everything should work nicely.
 
 
 Before using the GUI, one has to do one more step for setting the icon files. This can be done by `pyrcc4 -o icons.py icons.qrc`.
 
 Finally, one can start the GUI by `python account_password_manager.py`.
 
-
 ## Usage
 ### Add a set of account and password for a particular service into database
 
 1. Fill the **Magic Number** field with a secret code defined and remembered by yourself. 
 2. Fill the **Service** field for indicating what is this set of account and password for.
-3. Fill the account in the **AC or its hint** field.
-4. Fill the password in the **PW or its hint** field.
+3. Fill the account in the **Account** field.
+4. Fill the password in the **Password** field.
 5. Press **Add** button to add data into database shown in the right dock-widget.
 
 ### Look up the account and password for a particular service from the database
@@ -35,21 +38,25 @@ Finally, one can start the GUI by `python account_password_manager.py`.
 2. Fill the service field by either typing or clicking the service shown in the right dock-widget.
 3. Press **Find** button to find the account and password of the service(you get garbles if the magic-number does not match the one while saving).
 
-
 ### Remove the account and password for a particular service in the database
 
 1. Fill the service field by either typing or clicking the service shown in the right dock-widget.
-2. Press **Remove** button to remove the data for the corresponding service.
-
+2. Press **Remove** button.
+3. Click "Yes" in the poped window (a double-check) to delete the data for the service.
 
 ### Save the database
 
 1. Save to the current databse: Press **File** -> **Save** or the corresponding icon in the toolbar.
 2. Save as a new database: Press **File** -> **Save As** or the corresponding icon in the toolbar.
+
 ### Open the database
 
 1. Open an existing databse: Press **File** -> **Open** or the corresponding icon in the toolbar.
 2. Open an empty database: Press **File** -> **New** or the corresponding icon in the toolbar.
 
 
-
+## Other Properties
+1. At most 8 recent-used databases will be remembered and can be accessed in the file-menu.
+2. One can change the language of the interface in to language-menu (only surpport English and Chinese now).
+3. The last database you have edited will be loaded antomatically for convenience.
+4. The adjustments you made when using the GUI will be also loaded in the next usage.
