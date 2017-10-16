@@ -57,7 +57,7 @@ class AccountPasswordManager(QMainWindow):
         self.updateLanguage(self.language)
 
         QTimer.singleShot(0, self.loadInitialFile)
-        self.updateGUI("Ready")
+        self.updateGUI(self.LanguagePack.ready)
 
     #---- Methods for creating the Mainwindow ----
     def createCentralWidget(self):
@@ -132,20 +132,15 @@ class AccountPasswordManager(QMainWindow):
         self.listWidgetServices.itemClicked.connect(self.setService)
 
     def createActions(self):
-        actionNew = self.getAction("", self.newFile, QKeySequence.New,
-            "new", "Create an empty database.")
-        actionOpen = self.getAction("", self.openFile, QKeySequence.Open,
-            "open", "Open an existing database.")
-        actionSave = self.getAction("", self.saveFile, QKeySequence.Save,
-            "save", "Save data into current database.")
-        actionSaveAs = self.getAction("", self.saveasFile, "Ctrl+A",
-            "saveas", "Save data in a new database.")
+        actionNew = self.getAction(self.newFile, QKeySequence.New, "new")
+        actionOpen = self.getAction(self.openFile, QKeySequence.Open, "open")
+        actionSave = self.getAction(self.saveFile, QKeySequence.Save, "save")
+        actionSaveAs = self.getAction(self.saveasFile, "Ctrl+A", "saveas")
         self.actions = (actionNew, actionOpen, actionSave, actionSaveAs)
         actionGroupLanguage = QActionGroup(self)
         for language in self.LanguagePack.validLanguages:
             slot = partial(self.updateLanguage, language)
-            action = self.getAction("", slot,
-                checkable=True, signal="toggled(bool)")
+            action = self.getAction(slot, checkable=True, signal="toggled(bool)")
             action.setObjectName("action%s" % language)
             actionGroupLanguage.addAction(action)
             if language == self.language:
@@ -161,7 +156,7 @@ class AccountPasswordManager(QMainWindow):
         for language in self.LanguagePack.validLanguages:
             action = self.findChild(QAction, 'action%s' % language)
             menuLanguage.addAction(action)
-        actionAbout = self.getAction("", slot=self.about)
+        actionAbout = self.getAction(self.about)
         actionAbout.setObjectName('actionAbout')
         self.menuBar().addAction(actionAbout)
 
@@ -173,9 +168,9 @@ class AccountPasswordManager(QMainWindow):
     #---------------------------------------------
 
     #---- Methods for convenient ----
-    def getAction(self, text, slot=None, shortcut=None, icon=None,
+    def getAction(self, slot=None, shortcut=None, icon=None, text=None,
                  tip=None, checkable=False, signal="triggered()"):
-        action = QAction(text, self)
+        action = QAction(self) if text is None else QAction(text, self)
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % icon))
         if shortcut is not None:
@@ -199,7 +194,7 @@ class AccountPasswordManager(QMainWindow):
         if self.dirty:
             reply = QMessageBox.question(self,
                         self.LanguagePack.messageTitle,
-                        self.LanguagePack.messageOkToContinue,
+                        self.LanguagePack.okToContinue,
                         QMessageBox.Yes|QMessageBox.No|
                         QMessageBox.Cancel)
             if reply == QMessageBox.Cancel:
@@ -301,7 +296,7 @@ class AccountPasswordManager(QMainWindow):
             self.menuFile.addSeparator()
             for i, fname in enumerate(recentFiles):
                 text = "&%d %s" % (i+1, QFileInfo(fname).fileName())
-                action = self.getAction(text, slot=self.loadFile, icon="main")
+                action = self.getAction(self.loadFile, icon="main", text=text)
                 action.setData( QVariant(fname) )
                 self.menuFile.addAction(action)
 
@@ -336,7 +331,7 @@ class AccountPasswordManager(QMainWindow):
         if service in self.services.keys():
             reply = QMessageBox.question(self,
                         self.LanguagePack.messageTitle,
-                        self.LanguagePack.messageAddExistFile,
+                        self.LanguagePack.addExistFile,
                         QMessageBox.Yes|QMessageBox.Cancel)
             if reply == QMessageBox.Cancel:
                 return
@@ -348,22 +343,22 @@ class AccountPasswordManager(QMainWindow):
         password = encrypt(password, magicNumber)
         self.services[service] = [account, password]
         self.dirty = True
-        self.updateGUI('Successfully adding "%s" into database.' % service)
+        self.updateGUI(self.LanguagePack.addService % service)
 
     def removeService(self):
         service = unicode(self.fieldService.text()).strip()
         if service in self.services.keys():
             reply = QMessageBox.question(self,
-                        self.LanguagePack.messageTitle,
-                        self.LanguagePack.messageCheckRemove,
-                        QMessageBox.Yes|QMessageBox.Cancel)
+                self.LanguagePack.messageTitle,
+                self.LanguagePack.checkRemove,
+                QMessageBox.Yes|QMessageBox.Cancel)
             if reply == QMessageBox.Cancel:
                 return
             del self.services[service]
             self.dirty = True
-            self.updateGUI('Successfully removing "%s" from database.' % service)
+            self.updateGUI(self.LanguagePack.removeService % service)
         else:
-            text = u'%s "%s" (╥﹏╥)' % (self.LanguagePack.messageFindNoService, service)
+            text = self.LanguagePack.findNoService % service
             QMessageBox.warning(self, self.LanguagePack.messageTitle, text)
 
     def findService(self):
@@ -375,10 +370,10 @@ class AccountPasswordManager(QMainWindow):
             password = decrypt( self.services[service][1], magicNumber ).strip()
             self.fieldAccount.setText(account)
             self.fieldPassword.setText(password)
-            text = 'Successfully finding account and password of "%s".' % service
+            text = self.LanguagePack.findService % service
             self.updateGUI(text)
         else:
-            text = u'%s "%s" (╥﹏╥)' % (self.LanguagePack.messageFindNoService, service)
+            text =self.LanguagePack.findNoService % service
             QMessageBox.warning(self, self.LanguagePack.messageTitle, text)
 
     def clear(self):
@@ -387,8 +382,7 @@ class AccountPasswordManager(QMainWindow):
         self.fieldAccount.clear()
         self.fieldPassword.clear()
         self.fieldMagicNumber.setFocus()
-        text = 'All fields have been cleared.'
-        self.statusBar().showMessage(text, 5000)
+        self.statusBar().showMessage(self.LanguagePack.clear, 5000)
     #--------------------------
 
     #---- Methods for Actions ----
@@ -398,7 +392,7 @@ class AccountPasswordManager(QMainWindow):
         self.services = {}
         self.servicesFile = None
         self.dirty = True
-        self.updateGUI('Created an empty database.')
+        self.updateGUI(self.LanguagePack.newFile)
 
     def openFile(self):
         if not self.okToContinue():
@@ -406,14 +400,14 @@ class AccountPasswordManager(QMainWindow):
         directory = os.path.dirname(self.servicesFile) \
             if self.servicesFile is not None else "."
         fname = unicode( QFileDialog.getOpenFileName(self,
-              "Open a database", directory,
+              self.LanguagePack.openFile, directory,
               "ppb file (*.ppb)") )
         if fname:
             self.loadFile(fname)
 
     def saveFile(self):
         if len(self.services) == 0:
-            text = self.LanguagePack.messageSaveNothing
+            text = self.LanguagePack.saveNothing
             QMessageBox.warning(self, self.LanguagePack.messageTitle, text)
             return
 
@@ -423,20 +417,20 @@ class AccountPasswordManager(QMainWindow):
             fin = open(self.servicesFile,'wb')
             pickle.dump(self.services, fin, pickle.HIGHEST_PROTOCOL)
             fin.close()
-            message = 'Database has been saved to "%s".' % self.servicesFile
+            message = self.LanguagePack.saveFile % self.servicesFile
             self.dirty = False
             self.updateGUI(message)
 
     def saveasFile(self):
         if len(self.services) == 0:
-            text = self.LanguagePack.messageSaveNothing
+            text = self.LanguagePack.saveNothing
             QMessageBox.warning(self, self.LanguagePack.messageTitle, text)
             return
 
         directory = os.path.dirname(self.servicesFile) \
             if self.servicesFile is not None else '.'
         fname = unicode( QFileDialog.getSaveFileName(self,
-                    "Save the database", directory,
+                    self.LanguagePack.saveasFile, directory,
                     "ppb file (*.ppb)") )
         if fname:
             if "." not in fname:
@@ -462,8 +456,7 @@ class AccountPasswordManager(QMainWindow):
             fin.close()
             self.servicesFile = fname
             self.dirty = False
-            text = 'Database has been loaded from "%s".' % fname
-            self.updateGUI(text)
+            self.updateGUI(self.LanguagePack.loadFile % fname)
 
     def about(self):
         QMessageBox.about( self, self.LanguagePack.titleAbout,
