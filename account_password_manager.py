@@ -11,7 +11,7 @@ from functools import partial
 import icons
 from language import LanguagePack
 
-__version__ = 2.0
+__version__ = 3.0
 
 #---- Functions for encrypt and decrypt ----
 def encrypt(string, key):
